@@ -78,12 +78,50 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
             </div>
           </div>
 
-          <div>
-            <label for="appointment_date" class="block text-gray-600 font-medium mb-2">Appointment Date</label>
-            <input type="date" name="appointment_date" id="appointment_date"
-                   value="<?= htmlspecialchars($_POST['appointment_date'] ?? '') ?>"
-                   class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-400" required>
-          </div>
+       <div>
+  <label for="appointment_date" class="block text-gray-600 font-medium mb-2">Appointment Date</label>
+  <input type="date" name="appointment_date" id="appointment_date"
+         value="<?= htmlspecialchars($_POST['appointment_date'] ?? '') ?>"
+         min="<?= date('Y-m-d') ?>"
+         class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-sky-400" required>
+  <p id="dateError" class="text-red-500 text-sm mt-1 hidden">Invalid date! You cannot select a past date.</p>
+</div>
+
+<script>
+  const dateInput = document.getElementById('appointment_date');
+  const dateError = document.getElementById('dateError');
+
+  // Set min attribute dynamically to today
+  const today = new Date();
+  today.setHours(0,0,0,0); // Remove time portion
+  const todayStr = today.toISOString().split('T')[0];
+  dateInput.setAttribute('min', todayStr);
+
+  // Validate on input
+  dateInput.addEventListener('input', () => {
+    const selectedDate = new Date(dateInput.value);
+    selectedDate.setHours(0,0,0,0); // Remove time portion for comparison
+
+    if (selectedDate < today) {
+      dateError.classList.remove('hidden'); // Show error
+    } else {
+      dateError.classList.add('hidden'); // Hide error
+    }
+  });
+
+  // Prevent form submission if date is invalid
+  const form = dateInput.closest('form');
+  form.addEventListener('submit', (e) => {
+    const selectedDate = new Date(dateInput.value);
+    selectedDate.setHours(0,0,0,0);
+
+    if (selectedDate < today || !dateInput.value) {
+      e.preventDefault();
+      dateError.classList.remove('hidden');
+    }
+  });
+</script>
+
 
           <div>
             <label for="purpose" class="block text-gray-600 font-medium mb-2">Purpose</label>
