@@ -43,10 +43,11 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 |
 */
 // AUTH 
+// AUTH
 $router->get('/', 'AuthController::login');
 $router->match('/auth/login', 'AuthController::login', ['GET', 'POST']);
 $router->match('/auth/register', 'AuthController::register', ['GET', 'POST']);
-$router->get('/auth/otp', 'AuthController::otp');  
+$router->get('/auth/otp', 'AuthController::otp');
 $router->post('/auth/verify_otp', 'AuthController::verify_otp');
 $router->get('/auth/logout', 'AuthController::logout');
 
@@ -55,16 +56,13 @@ $router->get('/user/home', 'UserController::home');
 $router->match('/user/profile', 'UserController::profile', ['GET', 'POST']);
 $router->match('/user/appointment', 'UserController::appointment', ['GET', 'POST']);
 $router->get('/user/history', 'UserController::history');
-
 $router->post('/user/send_message', 'UserController::send_message');
-$router->post('user/delete_history', 'UserController@delete_history');
-
+$router->post('/user/delete_history', 'UserController::delete_history'); // FIXED
 
 // ADMIN 
 $router->get('/admin/dashboard', 'AdminController::dashboard');
 $router->match('/admin/appointments', 'AdminController::appointments', ['GET', 'POST']);
 $router->match('/admin/manageAppointments', 'AdminController::manageAppointments', ['GET', 'POST']);
-
 $router->match('/admin/findings', 'AdminController::findings', ['GET', 'POST']);
 $router->get('/admin/records', 'AdminController::records');
 $router->get('/admin/printRecords', 'AdminController::printRecords');
