@@ -90,6 +90,24 @@ class UserController extends Controller
             $purpose          = trim($_POST['purpose']);
             $status           = 'Pending';
 
+             $pending = $this->db->table('appointments')
+                    ->where('appointment_date', $appointment_date)
+                    ->where('status', 'Pending')
+                    ->get_all();
+
+    $pendingCount = $pending ? count($pending) : 0;
+
+    if ($pendingCount >= 5) {
+    $message = "❌ The selected date already has 5 pending appointments. Please pick another date.";
+
+    $this->call->view('user/appointment', [
+        'appointments' => $appointments,
+        'profile'      => $profile,
+        'message'      => $message
+    ]);
+    return;
+}
+
             $appointmentData = [
                 'user_id'          => $user_id,
                 'fullname'         => $fullname,

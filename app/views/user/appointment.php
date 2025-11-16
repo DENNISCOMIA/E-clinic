@@ -52,6 +52,12 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
           </div>
       <?php endif; ?>
 
+        <?php if(isset($message)): ?>
+           <div class="p-4 mb-4 text-red-800 bg-red-100 border border-red-300 rounded-lg">
+        <?= $message ?>
+        </div>
+        <?php endif; ?>
+
       <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
         <form method="POST" class="space-y-6">
           <div>
