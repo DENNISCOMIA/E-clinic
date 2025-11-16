@@ -259,7 +259,6 @@ public function records()
 
 public function printRecords()
 {
-    // Include the new PDF generator
     require_once APP_DIR . 'libraries/PdfGenerator.php';
     $pdf = new PdfGenerator();
 
@@ -268,18 +267,18 @@ public function printRecords()
     $month  = trim($_GET['month'] ?? '');
     $status = trim($_GET['status'] ?? '');
 
-    // Load records
     $this->call->model('RecordModel');
     $recordModel = new RecordModel();
     $records = $recordModel->getFilteredRecords($search, $month, $status);
 
-    // Build printable HTML
+    // HTML TEMPLATE
     $html = '<!doctype html><html><head><meta charset="utf-8"><style>
         body{font-family: DejaVu Sans, sans-serif; font-size:12px;}
         table{width:100%; border-collapse:collapse;}
-        th{background:#0ea5e9;color:#fff;padding:8px;text-align:left;}
+        th{background:#0ea5e9;color:#fff;padding:8px;}
         td{padding:8px;border-bottom:1px solid #ddd;}
         </style></head><body>';
+
     $html .= '<h2 style="text-align:center;color:#0ea5e9;">Patient Records Report</h2>';
     $html .= '<table><thead><tr>
                 <th>ID</th><th>Full Name</th><th>Age</th><th>Contact</th>
@@ -290,15 +289,15 @@ public function printRecords()
     if (!empty($records)) {
         foreach ($records as $row) {
             $html .= '<tr>';
-            $html .= '<td>' . htmlspecialchars($row['user_id'] ?? '') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['fullname'] ?? '') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['age'] ?? '') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['contact'] ?? '') . '</td>';
+            $html .= '<td>' . ($row['user_id'] ?? '') . '</td>';
+            $html .= '<td>' . ($row['fullname'] ?? '') . '</td>';
+            $html .= '<td>' . ($row['age'] ?? '') . '</td>';
+            $html .= '<td>' . ($row['contact'] ?? '') . '</td>';
             $html .= '<td>' . (!empty($row['appointment_date']) ? date("F j, Y", strtotime($row['appointment_date'])) : '-') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['purpose'] ?? '-') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['status'] ?? '-') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['findings'] ?? '-') . '</td>';
-            $html .= '<td>' . htmlspecialchars($row['prescription'] ?? '-') . '</td>';
+            $html .= '<td>' . ($row['purpose'] ?? '-') . '</td>';
+            $html .= '<td>' . ($row['status'] ?? '-') . '</td>';
+            $html .= '<td>' . ($row['findings'] ?? '-') . '</td>';
+            $html .= '<td>' . ($row['prescription'] ?? '-') . '</td>';
             $html .= '</tr>';
         }
     } else {
@@ -310,6 +309,7 @@ public function printRecords()
     // Generate PDF
     $pdf->generate($html, 'Patient_Records.pdf', false);
 }
+
 
 }
 ?>

@@ -4,35 +4,25 @@ class PdfGenerator
 {
     public function generate($html, $filename = 'document.pdf', $download = false)
     {
-        // ✅ Load Dompdf autoloader first (before using any classes)
-        $autoloadPath = __DIR__ . '/../../vendor/autoload.php';
-        if (file_exists($autoloadPath)) {
-            require_once $autoloadPath;
-        } else {
-            throw new Exception("Dompdf autoload not found at: {$autoloadPath}");
+        // Load Composer autoload
+        $autoload = __DIR__ . '/../../vendor/autoload.php';
+        if (!file_exists($autoload)) {
+            throw new Exception("Composer autoload not found: " . $autoload);
         }
+        require_once $autoload;
 
-        // ✅ Import Dompdf classes AFTER loading autoloader
-        $optionsClass = 'Dompdf\\Options';
-        $dompdfClass = 'Dompdf\\Dompdf';
-
-        if (!class_exists($optionsClass) || !class_exists($dompdfClass)) {
-            throw new Exception("Dompdf classes not loaded properly. Check vendor installation.");
-        }
-
-        // ✅ Initialize Dompdf with options
-        $options = new $optionsClass();
+        // Dompdf classes
+        $options = new Dompdf\Options();
         $options->set('isRemoteEnabled', true);
         $options->set('defaultFont', 'DejaVu Sans');
-        $options->setChroot(__DIR__ . '/../../public'); // ✅ Allow local images
+        $options->setChroot(__DIR__ . '/../../public');
 
-
-        $dompdf = new $dompdfClass($options);
+        $dompdf = new Dompdf\Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        // ✅ Output PDF
+        // Stream output
         $dompdf->stream($filename, ['Attachment' => $download]);
     }
 }
