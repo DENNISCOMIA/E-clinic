@@ -1,4 +1,7 @@
 <?php
+// Load Composer Autoload FIRST (before using PHPMailer classes)
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -7,9 +10,6 @@ class Mailer extends PHPMailer
     public function __construct($exceptions = null)
     {
         parent::__construct($exceptions);
-
-        // Load Composer autoload
-        require_once __DIR__ . '/../../vendor/autoload.php';
 
         // Gmail SMTP SETTINGS
         $this->isSMTP();
@@ -22,6 +22,6 @@ class Mailer extends PHPMailer
 
         // Default FROM
         $this->setFrom('denniscomia445@gmail.com', 'eClinic Team');
-        $this->isHTML(true); 
+        $this->isHTML(true);
     }
 }
